@@ -3,20 +3,37 @@ import useDownloader from "./store/store"
 
 function App() {
   const [url, setUrl] = useState<string>("")
-  const { format, setFormat, videoInfo, setVideoInfo } = useDownloader()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { format, setFormat, setVideoInfo } = useDownloader()
 
   const handleDownload = async () => {
+    setIsLoading(true)
     try {
-      const res = await fetch('/api/download', {
+      const res = await fetch('http://localhost:5000/api/download', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url, format })
       })
-      const data = await res.json()
-      setVideoInfo(data)
+
+      if (!res.ok) {
+        throw new Error("Failed to download")
+      }
+      // blob is binary large object (immutable, file like data type)
+      const blob = await res.blob()
+
+      const downloadUrl = window.URL.createObjectURL(blob)
+
+      const link = document.createElement('a')
+      link.href = downloadUrl
+      link.download = `download.${format}`
+      link.click()
+
+      setVideoInfo({ url: downloadUrl })
 
     } catch (error) {
       console.error("Download failed...", error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -45,22 +62,16 @@ function App() {
 
         <button
           onClick={handleDownload}
-          className="p-2 bg-blue-700 hover:bg-blue-800 rounded w-full cursor-pointer"
+          className={`p-2 bg-blue-700 hover:bg-blue-800 rounded w-full cursor-pointer 
+            ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+          disabled={isLoading}
         >
-          Download
+          {isLoading ? "Downloading..." : "Download"}
         </button>
 
-        {videoInfo &&
-          <div className="mt-4">
-            <a
-              href={videoInfo.url}
-              download
-              className="text-blue-300 hover:underline"
-            >
-              {videoInfo.title}
-            </a>
-          </div>
-        }
+        {isLoading && (
+          <div className="text-center mt-4 animate-pulse">Downloading... Please wait.</div>
+        )}
       </div>
     </div>
   )

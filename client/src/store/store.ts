@@ -1,7 +1,7 @@
 import { create } from "zustand"
 
 interface VideoInfo {
-    title: string
+    title?: string
     url: string
 }
 

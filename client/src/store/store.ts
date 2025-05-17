@@ -1,9 +1,14 @@
 import { create } from "zustand"
 
+interface VideoInfo {
+    title: string
+    url: string
+}
+
 interface DownloadState {
-    videoInfo: string | null;
-    setVideoInfo: (info: string) => void
+    videoInfo: VideoInfo | null;
     format: string
+    setVideoInfo: (info: VideoInfo) => void
     setFormat: (format: string) => void
 }
 

@@ -11,7 +11,7 @@ const app = express()
 const asyncPipeline = promisify(pipeline)
 
 const corsOptions = {
-    origin: ['http://localhost:5173', process.env.CLIENT_URL], // Allow requests only from these origins
+    origin: [process.env.CLIENT_URL, 'http://localhost:5173'], // Allow requests only from these origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies, if your application uses them
     optionsSuccessStatus: 204,

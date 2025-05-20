@@ -2,7 +2,7 @@ import useDownloader from "./store/store"
 import { FiLoader } from "react-icons/fi";
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL as string || 'http://localhost:5000'
-console.log(apiUrl)
+
 function App() {
 
   const { url, videoInfo, format, isLoading, setUrl, setVideoInfo, setFormat, setIsLoading } = useDownloader()

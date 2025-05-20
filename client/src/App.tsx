@@ -1,7 +1,8 @@
 import useDownloader from "./store/store"
 import { FiLoader } from "react-icons/fi";
 
-
+const apiUrl = import.meta.env.VITE_API_BASE_URL as string || 'http://localhost:5000'
+console.log(apiUrl)
 function App() {
 
   const { url, videoInfo, format, isLoading, setUrl, setVideoInfo, setFormat, setIsLoading } = useDownloader()
@@ -11,7 +12,7 @@ function App() {
     setIsLoading(true)
 
     try {
-      const res = await fetch('http://localhost:5000/api/info', {
+      const res = await fetch(`${apiUrl}/api/info`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url })
@@ -83,7 +84,7 @@ function App() {
           <div className="p-4 bg-gray-800 rounded-sm">
             <img src={videoInfo.thumbnail_url} alt="Video Thumbnail" className="w-full mb-4 rounded-sm" />
             <p className="text-lg text-pretty font-semibold">{videoInfo.title}</p>
-            <a href={`http://localhost:5000/api/download?url=${encodeURIComponent(url)}&format=${format}`} download={`download.${format === 'mp3' ? 'mp3' : 'mp4'}`} >
+            <a href={`${apiUrl}/api/download?url=${encodeURIComponent(url)}&format=${format}`} download={`download.${format === 'mp3' ? 'mp3' : 'mp4'}`} >
               <button
                 className="mt-4 p-3 w-full text-center cursor-pointer bg-green-600 hover:bg-green-700 rounded-sm"> Download {format === 'mp3' ? 'Audio' : 'Video'}
               </button>

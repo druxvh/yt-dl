@@ -3,12 +3,15 @@ import cors from "cors"
 import ytdl, { downloadOptions } from "@distube/ytdl-core";
 import { promisify } from "util";
 import { pipeline } from "stream";
+import dotenv from "dotenv"
+dotenv.config()
 
+const port = process.env.PORT || 5000
 const app = express()
 const asyncPipeline = promisify(pipeline)
 
 const corsOptions = {
-    origin: ['http://localhost:5173'], // Allow requests only from these origins
+    origin: ['http://localhost:5173', process.env.CLIENT_URL], // Allow requests only from these origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies, if your application uses them
     optionsSuccessStatus: 204,
@@ -72,6 +75,6 @@ app.post('/api/info', async (req: Request, res: Response) => {
     }
 })
 
-app.listen(5000, () => {
-    console.log(`Server running on 5000`)
+app.listen(port, () => {
+    console.log(`Server running on port: ${process.env.PORT}`)
 })
